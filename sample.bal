@@ -4,12 +4,10 @@ import ballerinax/mysql.driver as _;
 import ballerinax/mysql;
 
 // Types
-type Employee record {|
-     int employeeId;
-     string firstName;
-     string? lastName?;
-     string email;
-     string designation;
+type User record {|
+     string userName;
+     int allowAccess;
+     date endSub;
 |};
 
 // MySQL configuration parameters
@@ -24,35 +22,33 @@ final mysql:Client mysqlClient = check new (host = host, port = port, user = use
 
 service /company on new http:Listener(8090) {
 
-    isolated resource function post employees(@http:Payload Employee payload) returns error? {
-        sql:ParameterizedQuery insertQuery = `INSERT INTO employees VALUES (${payload.employeeId},
-                                              ${payload.firstName}, ${payload?.lastName},${payload.email},
-                                              ${payload.designation})`;
+    isolated resource function post user(@http:Payload User payload) returns error? {
+        sql:ParameterizedQuery insertQuery = `INSERT INTO Users VALUES (${payload.userName},
+                                              ${payload.allowAccess}, ${payload?.endSub})`;
         sql:ExecutionResult _ = check mysqlClient->execute(insertQuery);
     }
 
-    isolated resource function put employees(@http:Payload Employee payload) returns error? {
-        sql:ParameterizedQuery updateQuery = `UPDATE  employees SET firstName=${payload.firstName},
-                                             lastName=${payload?.lastName}, email=${payload.email},
-                                             designation=${payload.designation} where
-                                             employeeId= ${payload.employeeId}`;
+    isolated resource function put user(@http:Payload User payload) returns error? {
+        sql:ParameterizedQuery updateQuery = `UPDATE  Users SET allowAccess=${payload.allowAccess},
+                                             endSub=${payload?.endSub} where
+                                             userName= ${payload.userName}`;
         sql:ExecutionResult _ = check mysqlClient->execute(updateQuery);
     }
     
-    isolated resource function get employees(string designation) returns json|error {
-        sql:ParameterizedQuery selectQuery = `select * from employees where designation=${designation}`;
-        stream <Employee, sql:Error?> resultStream = mysqlClient->query(selectQuery);
-        Employee[] employees = [];
+    isolated resource function get users(string userName) returns json|error {
+        sql:ParameterizedQuery selectQuery = `select * from Users where userName=${userName}`;
+        stream <User, sql:Error?> resultStream = mysqlClient->query(selectQuery);
+        User[] users = [];
 
-        check from Employee employee in resultStream
+        check from User item in resultStream
             do {
-                employees.push(employee);
+                users.push(item);
             };
-        return employees;
+        return users;
     }
 
-    isolated resource function delete employees(int employeeId) returns error? {
-        sql:ParameterizedQuery deleteQuery = `DELETE FROM employees WHERE employeeId = ${employeeId}`;
+    isolated resource function delete user(string userName) returns error? {
+        sql:ParameterizedQuery deleteQuery = `DELETE FROM Users WHERE userName = ${userName}`;
         sql:ExecutionResult _ = check mysqlClient->execute(deleteQuery);
     }
 
