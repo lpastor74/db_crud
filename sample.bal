@@ -3,11 +3,12 @@ import ballerina/sql;
 import ballerinax/mysql.driver as _;
 import ballerinax/mysql;
 
+
 // Types
 type User record {|
      string userName;
      int allowAccess;
-     date endSub;
+     string? endSub?;
 |};
 
 // MySQL configuration parameters
@@ -23,8 +24,7 @@ final mysql:Client mysqlClient = check new (host = host, port = port, user = use
 service /company on new http:Listener(8090) {
 
     isolated resource function post user(@http:Payload User payload) returns error? {
-        sql:ParameterizedQuery insertQuery = `INSERT INTO Users VALUES (${payload.userName},
-                                              ${payload.allowAccess}, ${payload?.endSub})`;
+        sql:ParameterizedQuery insertQuery = `INSERT INTO Users (userName,allowAccess,endSub) VALUES (${payload.userName}, ${payload.allowAccess}, DATE_ADD(now(),interval 5 day))`;
         sql:ExecutionResult _ = check mysqlClient->execute(insertQuery);
     }
 
@@ -36,7 +36,7 @@ service /company on new http:Listener(8090) {
     }
     
     isolated resource function get users(string userName) returns json|error {
-        sql:ParameterizedQuery selectQuery = `select * from Users where userName=${userName}`;
+        sql:ParameterizedQuery selectQuery = `select userName,allowAccess,endSub from Users where userName=${userName}`;
         stream <User, sql:Error?> resultStream = mysqlClient->query(selectQuery);
         User[] users = [];
 
