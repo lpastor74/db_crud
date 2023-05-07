@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: UserMgtAPI
+  description: This api is used to connect to the userSubAPI service
+  version: 1.0.0
+servers:
+  - url: /company
+security:
+  - default: []
+paths:
+  /users:
+    get:
+      parameters:
+        - name: userName
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ok
+        optional: false
+  /user:
+    put:
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          User:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: ok
+        optional: false
+    post:
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          User:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: ok
+        optional: false
+    delete:
+      parameters:
+        - name: userName
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ok
+        optional: false
+
