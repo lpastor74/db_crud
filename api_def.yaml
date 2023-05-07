@@ -21,5 +21,44 @@ paths:
       responses:
         '200':
           description: ok
-  
+  /user:
+    put:
+      requestBody:
+        description: 'Update a user'
+        content:
+          application/json:
+            schema:
+              type: object
+            required:
+                - userName  
+        required: true
+      responses:
+        '200':
+          description: ok
+    post:
+      requestBody:
+        description: 'Create a new user'
+        content:
+          application/json:
+            schema:
+              type: object
+            required:
+                - userName  
+        required: true
+      responses:
+        '200':
+          description: ok
+    delete:
+      parameters:
+        - name: userName
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ok
+
 
