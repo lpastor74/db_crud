@@ -227,7 +227,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "observe"
-version = "1.0.7"
+version = "1.0.6"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
@@ -338,4 +338,5 @@ dependencies = [
 modules = [
 	{org = "strb", packageName = "crud_rest_api", moduleName = "crud_rest_api"}
 ]
+
 
