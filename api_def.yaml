@@ -25,25 +25,25 @@ paths:
     put:
       requestBody:
         description: 'Update a user'
-        content:
-          application/json:
-            schema:
-              type: object
-            required:
-                - userName  
+        operationId: updateUser
+        requestBody:
+          description: Update an exist user 
+          content:
+            application/json:
+            application/xml:
         required: true
       responses:
         '200':
           description: ok
     post:
       requestBody:
-        description: 'Create a new user'
-        content:
-          application/json:
-            schema:
-              type: object
-            required:
-                - userName  
+        description: 'Create a user'
+        operationId: createUser
+        requestBody:
+          description: Create an new user 
+          content:
+            application/json:
+            application/xml:
         required: true
       responses:
         '200':
