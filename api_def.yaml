@@ -22,28 +22,30 @@ paths:
         '200':
           description: ok
   /user:
-    put:
+    post:
+      description: 'update an existing user '
+      operationId: updateUser
+      parameters: []
       requestBody:
-        description: 'Update a user'
-        operationId: updateUser
-        requestBody:
-          description: Update an exist user 
-          content:
-            application/json:
-            application/xml:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
         required: true
       responses:
         '200':
           description: ok
     post:
+      description: 'create a new user '
+      operationId: createUser
+      parameters: []
       requestBody:
-        description: 'Create a user'
-        operationId: createUser
-        requestBody:
-          description: Create an new user 
-          content:
-            application/json:
-            application/xml:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
         required: true
       responses:
         '200':
