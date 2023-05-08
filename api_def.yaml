@@ -8,6 +8,21 @@ servers:
 security:
   - default: []
 paths:
+  /risk:
+    post:
+      description: 'check sub for user '
+      operationId: checkUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        '200':
+          description: ok
   /users:
     get:
       parameters:

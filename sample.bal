@@ -11,6 +11,10 @@ type User record {|
      string? endSub?;
 |};
 
+type RiskRequest record {
+string userName;
+};
+
 // MySQL configuration parameters
 configurable string host = ?;
 configurable int port = ?;
@@ -46,6 +50,24 @@ service /company on new http:Listener(8090) {
             };
         return users;
     }
+
+    isolated resource function post risk(@http:Payload RiskRequest payload) returns User|error? {
+        //sql:ParameterizedQuery insertQuery = `INSERT INTO Users (userName,allowAccess,endSub) VALUES (${payload.userName}, ${payload.allowAccess}, DATE_ADD(now(),interval 5 day))`;
+        //sql:ExecutionResult _ = check mysqlClient->execute(insertQuery);
+
+        sql:ParameterizedQuery selectQuery = `select userName,allowAccess,endSub from Users where userName=${payload.userName}`;
+        
+        stream <User, sql:Error?> resultStream =  mysqlClient->query(selectQuery);
+        User[] users = [];
+
+        check from User item in resultStream
+            do {
+                users.push(item);
+            };
+        return users[0];
+    }
+
+
 
     isolated resource function delete user(string userName) returns error? {
         sql:ParameterizedQuery deleteQuery = `DELETE FROM Users WHERE userName = ${userName}`;
